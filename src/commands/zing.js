@@ -10,18 +10,18 @@ const openai = new OpenAIApi(configuration);
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('image')
-		.setDescription('Provides information about the user.'),
+		.setDescription('Generates an image.')
+		.addStringOption(option => option.setName("prompt")
+		.setDescription("Describe image.")),
 	async execute(interaction) {
 		interaction.deferReply()
+		const prompt = interaction.options.getString('prompt');
 		const response = await openai.createImage({
-			prompt: "Asian midget",
-			n: 2,
+			prompt: `${prompt}`,
+			n: 1,
 			size: "1024x1024",
 		  });
-		
-		console.log(response.data.data[0].url)
 
-		
-		await interaction.editReply("Hi");
+		await interaction.editReply(response.data.data[0].url);
 	},
 };
